@@ -2,6 +2,32 @@ const User = require("../models/User");
 const generateToken = require("../utlis/generateToken");
 const jwt = require("jsonwebtoken");
 
+const getUser = async (req, res) => {
+  try {
+
+    const result = await User.find({}).select("_id name image");
+    
+   
+    return res.status(200).json({
+      code: 200,
+      status: "success",
+      data:result.map((item)=>{
+        return {
+          label:item.name,
+          value:item._id,
+          image:item.image,
+        }
+      }),
+    });
+  } catch (error) {
+    return res.status(400).json({
+      code: 400,
+      status: "failed",
+      msg: error,
+    });
+  }
+};
+
 const createUser = async (req, res) => {
   try {
     const data = req.body;
@@ -64,4 +90,5 @@ const userLogin = async (req, res) => {
 module.exports = {
   createUser,
   userLogin,
+  getUser
 };

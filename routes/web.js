@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { createUser, userLogin } = require("../controller/UserController");
+const { createUser, userLogin, getUser } = require("../controller/UserController");
 const { createTask, getTaskList, updateTask, detailsTask, deleteTask } = require("../controller/TaskController");
 const { createProject, getProjectList, detailsProject, updateProject, deleteProject } = require("../controller/ProjectController");
 const { createActivity, getActivityList, detailsActivity, updateActivity, deleteActivity } = require("../controller/ActivityController");
 
 // user
+router.get("/user", getUser);
 router.post("/user", createUser);
 router.post("/user-login", userLogin);
 
