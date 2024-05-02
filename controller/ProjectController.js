@@ -47,6 +47,15 @@ const detailsProject = async (req, res) => {
           path: "assign",
           select:"_id name image"
         },
+        {
+          path:'activity',
+          populate: [
+            {
+              path: "userId",
+              select: "_id name image",
+            }
+          ]
+        }
       ]
     });
     if (!result) {
@@ -177,6 +186,15 @@ const getProjectList = async (req, res) => {
               path: "assign",
               select:"_id name image"
             },
+            {
+              path:'activity',
+              populate: [
+                {
+                  path: "userId",
+                  select: "_id name image",
+                }
+              ]
+            }
           ]
         },
       ],
