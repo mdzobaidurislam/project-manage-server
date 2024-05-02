@@ -1,15 +1,15 @@
-const Task = require("../models/TaskModel");
+const Activity = require("../models/ActivityModel");
 const User = require("../models/User");
 
-const createTask = async (req, res) => {
+const createActivity = async (req, res) => {
   try {
     const data = req.body;
-    const result = await Task.create(data);
+    const result = await Activity.create(data);
     if (!result) {
       return res.status(401).json({
         code: 401,
         status: "failed",
-        msg: "Not created task",
+        msg: "Not created Activity",
       });
     }
 
@@ -26,23 +26,18 @@ const createTask = async (req, res) => {
     });
   }
 };
-const detailsTask = async (req, res) => {
+const detailsActivity = async (req, res) => {
   try {
    
-    const result = await Task.findOne({_id:req.params.id}).populate({
+    const result = await Activity.findOne({_id:req.params.id}).populate({
       path:'assign',
       select:"_id name image"
-    }).populate({path:"activity",populate: [
-      {
-        path: "userId",
-        select: "_id name image",
-      }
-    ]});
+    });
     if (!result) {
       return res.status(401).json({
         code: 401,
         status: "failed",
-        msg: "Not  task fonud" ,
+        msg: "Not  Activity fonud" ,
         data:null
       });
     }
@@ -60,14 +55,14 @@ const detailsTask = async (req, res) => {
     });
   }
 };
-const deleteTask = async (req, res) => {
+const deleteActivity = async (req, res) => {
   try {
-    const doc = await Task.findOne({_id:req.params.id});
+    const doc = await Activity.findOne({_id:req.params.id});
     if (!doc) {
       return res.status(401).json({
         code: 401,
         status: "failed",
-        msg: "Not  task fonud" ,
+        msg: "Not  Activity fonud" ,
         data:null
       });
     }
@@ -75,7 +70,7 @@ const deleteTask = async (req, res) => {
     return res.status(200).json({
       code: 200,
       status: "success",
-      msg: "Task delete succesfullly!",
+      msg: "Activity delete succesfullly!",
     });
   } catch (error) {
     return res.status(400).json({
@@ -85,24 +80,24 @@ const deleteTask = async (req, res) => {
     });
   }
 };
-const updateTask = async (req, res) => {
+const updateActivity = async (req, res) => {
   try {
-    const doc = await Task.findOne({_id:req.params.id});
+    const doc = await Activity.findOne({_id:req.params.id});
     if (!doc) {
       return res.status(401).json({
         code: 401,
         status: "failed",
-        msg: "Not  task fonud" ,
+        msg: "Not  Activity fonud" ,
         data:null
       });
     }
-    const data = await Task.findOneAndUpdate({_id:req.params.id}, req.body, {
+    const data = await Activity.findOneAndUpdate({_id:req.params.id}, req.body, {
       new: true,
     });
     return res.status(200).json({
       code: 200,
       status: "success",
-      msg: "Task update succesfullly!",
+      msg: "Activity update succesfullly!",
       data:data
     });
   } catch (error) {
@@ -113,59 +108,31 @@ const updateTask = async (req, res) => {
     });
   }
 };
-const getTaskList = async (req, res) => {
+const getActivityList = async (req, res) => {
   const {
     page = 1,
     limit = 12,
     pagination = true,
-    title = "",
-    status = "",
-    startDate = "",
-    endDate = "",
+    text = ""
   } = req.query;
 
   try {
     let filter = {};
-    let start;
-    let end;
-    if (startDate) {
-      start = new Date(startDate);
-    }
-    if (endDate) {
-      end = new Date(endDate);
-    }
-    if (start || endDate) {
-      filter.createdAt = { $gte: start, $lte: end };
-    }
+    
 
-    if (title) filter.title = { $regex: title, $options: "i" };
-    if (status) filter.status = status;
+    if (text) filter.text = { $regex: text, $options: "i" };
 
-    const result = await Task.paginate(filter, {
+    const result = await Activity.paginate(filter, {
       page: page,
       limit: limit,
       pagination: JSON.parse(pagination),
       sort: { createdAt: -1 },
-      populate: [
-        {
-          path: "assign",
-          select: "_id name image",
-        },
-        {
-          path: "activity",
-          populate: [
-            {
-              path: "userId",
-              select: "_id name image",
-            }
-          ]
-        },
-      ],
+      
     });
 
     return res.status(200).json({
       code: 200,
-      status: "success",
+      status: "failed",
       data: result,
     });
   } catch (error) {
@@ -178,9 +145,9 @@ const getTaskList = async (req, res) => {
 };
 
 module.exports = {
-  createTask,
-  getTaskList,
-  detailsTask,
-  updateTask,
-  deleteTask,
+  createActivity,
+  getActivityList,
+  detailsActivity,
+  updateActivity,
+  deleteActivity,
 };

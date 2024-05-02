@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const mongoosePaginate = require("mongoose-paginate-v2");
 
-const TaskSchema = new Schema(
+const ProjectSchema = new Schema(
   {
     title: {
       type: String,
@@ -28,25 +28,31 @@ const TaskSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    activity: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Activity",
-      },
-    ],
     assign: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
       },
     ],
+    activity: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Activity",
+      },
+    ],
+    task: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Task",
+      },
+    ],
   },
   {
-    collection: "Task",
+    collection: "Project",
     timestamps: true,
   }
 );
-TaskSchema.plugin(mongoosePaginate);
-const Task = mongoose.model("Task", TaskSchema);
+ProjectSchema.plugin(mongoosePaginate);
+const Project = mongoose.model("Project", ProjectSchema);
 
-module.exports = Task;
+module.exports = Project;
